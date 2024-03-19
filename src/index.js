@@ -139,7 +139,7 @@ app.post("/api/register", (req, res) => __awaiter(void 0, void 0, void 0, functi
 }));
 function generateHeader(doc) {
     doc
-        .image("/home/sudityagupta/Documents/Poodi-Sabji-dot-com/backend/src/assets/5528439.jpg", 50, 45, { width: 50 })
+        .image("assets/5528439.jpg", 50, 45, { width: 50 })
         .fillColor("#444444")
         .fontSize(20)
         .text("Poodi Sabji dot-com", 110, 57)

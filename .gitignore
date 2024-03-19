@@ -1,0 +1,13 @@
+# Node.js dependencies
+node_modules
+
+# # Environment variables
+# .env
+
+# # Compiled JavaScript files
+# *.js
+# *.js.map
+
+# # Log files
+# *.log
+# logs/

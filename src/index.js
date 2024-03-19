@@ -70,8 +70,8 @@ app.get("/api/inventory", (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 }));
 app.post("/api/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password, adminLogin } = req.body;
     try {
+        const { email, password, adminLogin } = req.body;
         const user = yield usersColl.findOne({
             email: email,
         });
@@ -228,9 +228,9 @@ const dummyItems = [
 //   paid: 150,
 // };
 app.get("/api/get-cart", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email } = req.query;
-    // console.log(req.query);
     try {
+        const { email } = req.query;
+        // console.log(req.query);
         const cart = (yield cartItemsColl.findOne({ email: email }));
         return res.status(200).json({ cartItems: cart.cartItems });
     }
@@ -239,14 +239,14 @@ app.get("/api/get-cart", (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 }));
 app.post("/api/add-to-cart", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const cartItems = req.body.cartItems;
-    const email = req.body.email;
-    const doc = {
-        cartItems: cartItems,
-        email: email,
-    };
-    console.log(doc);
     try {
+        const cartItems = req.body.cartItems;
+        const email = req.body.email;
+        const doc = {
+            cartItems: cartItems,
+            email: email,
+        };
+        console.log(doc);
         const response = yield cartItemsColl.updateOne({ email: email }, { $set: { cartItems: cartItems } }, { upsert: true });
         console.log(response);
         return res.send("Successfully Inserted Cart Items").status(200);
@@ -256,21 +256,26 @@ app.post("/api/add-to-cart", (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 }));
 app.get("/api/generate-pdf", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email } = req.query;
-    const cart = (yield cartItemsColl.findOne({ email: email }));
-    const cartItems = cart.cartItems;
-    const bill = {
-        invoiceNumber: "#INV123456",
-        client: email,
-        items: cartItems,
-    };
-    const doc = new pdfkit_1.default({ size: "A4", margin: 50 });
-    generateHeader(doc);
-    generateCustomerInformation(doc);
-    generateInvoiceTable(doc, bill);
-    res.setHeader("Content-Type", "application/pdf");
-    doc.pipe(res);
-    doc.end();
+    try {
+        const { email } = req.query;
+        const cart = (yield cartItemsColl.findOne({ email: email }));
+        const cartItems = cart.cartItems;
+        const bill = {
+            invoiceNumber: "#INV123456",
+            client: email,
+            items: cartItems,
+        };
+        const doc = new pdfkit_1.default({ size: "A4", margin: 50 });
+        generateHeader(doc);
+        generateCustomerInformation(doc);
+        generateInvoiceTable(doc, bill);
+        res.setHeader("Content-Type", "application/pdf");
+        doc.pipe(res);
+        doc.end();
+    } catch (error) {
+        return res.send(`Failed to genrate pdf due to ${error}`).status(500);
+    }
+
 }));
 // export { generateBillPdf, Invoice, InvoiceItem, Client };
 app.listen(PORT, () => {
